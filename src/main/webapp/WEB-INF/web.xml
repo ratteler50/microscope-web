@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  id="WebApp_ID"
+  version="2.5"
+  xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  <display-name>Microscope</display-name>
+  <description>
+    An awesome game
+  </description>
+
+  <listener>
+    <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener
+    </listener-class>
+  </listener>
+
+
+  <filter>
+    <filter-name>ShiroFilter</filter-name>
+    <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>ShiroFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+  </filter-mapping>
+
+
+  <servlet>
+    <servlet-name>list games for user</servlet-name>
+    <servlet-class>servlets.GetUserGames</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>list games for user</servlet-name>
+    <url-pattern>/PickGame</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>new game</servlet-name>
+    <servlet-class>servlets.GetUsers</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>new game</servlet-name>
+    <url-pattern>/NewGame</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>create game</servlet-name>
+    <servlet-class>servlets.CreateGame</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>create game</servlet-name>
+    <url-pattern>/PickBigPicture</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>fresh</servlet-name>
+    <servlet-class>servlets.GetFreshGameState</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fresh</servlet-name>
+    <url-pattern>/PlayGame</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>add card</servlet-name>
+    <servlet-class>servlets.PlayNewCard</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>add card</servlet-name>
+    <url-pattern>/PlayNewCard</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>set answer</servlet-name>
+    <servlet-class>servlets.SetSceneAnswer</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>set answer</servlet-name>
+    <url-pattern>/SetSceneAnswer</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>play nested</servlet-name>
+    <servlet-class>servlets.PlayNestedCard</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>play nested</servlet-name>
+    <url-pattern>/PlayNestedCard</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>create legacy</servlet-name>
+    <servlet-class>servlets.SetLegacy</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>create legacy</servlet-name>
+    <url-pattern>/SetLegacy</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>play legacy</servlet-name>
+    <servlet-class>servlets.PlayLegacy</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>play legacy</servlet-name>
+    <url-pattern>/PlayLegacy</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>pick focus</servlet-name>
+    <servlet-class>servlets.SetFocus</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>pick focus</servlet-name>
+    <url-pattern>/SetFocus</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>set big picture</servlet-name>
+    <servlet-class>servlets.SetBigPicture</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>set big picture</servlet-name>
+    <url-pattern>/SetBigPicture</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>play bookend</servlet-name>
+    <servlet-class>servlets.PlayBookend</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>play bookend</servlet-name>
+    <url-pattern>/PlayBookend</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>play palette</servlet-name>
+    <servlet-class>servlets.PlayPalette</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>play palette</servlet-name>
+    <url-pattern>/PlayPalette</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>play first pass</servlet-name>
+    <servlet-class>servlets.PlayFirstPass</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>play first pass</servlet-name>
+    <url-pattern>/PlayFirstPass</url-pattern>
+  </servlet-mapping>
+
+</web-app>
+    
