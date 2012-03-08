@@ -1,0 +1,155 @@
+Note: Player 0 -> Player N
+
+
+Round 0:
+Turn 0: Add Players
+Turn 1: Set Big Picture
+Turn 2: Bookend Periods
+Turn 3: Palette
+Turn 4: Everyone add period or event
+
+
+
+
+If N = 2
+Round k > 0
+Turn 0: Player (k mod 2) is new lens, and picks a focus
+Turn 1: Player (k mod 2) plays period, event or scene
+Turn 2: Player (k mod 2) plays nested event or scene (if desired)
+Turn 3: Player (k+1 mod 2) plays period, event or scene
+Turn 4: Player (k mod 2) plays period, event or scene
+Turn 5: Player (k+1 mod 2) plays period, event or scene
+Turn 6: Player (k mod 2) plays period, event or scene
+Turn 7: Player (k mod 2) plays nested, event or scene (if desired)
+Turn 8: Player (k+1 mod 2) chooses a legacy.
+Turn 9: Player (k+1 mod 2) creates an event or scene based on legacy
+
+
+
+
+If N = 3
+Round k > 0
+Turn 0: Player (k mod 3) is new lens, and picks a focus
+Turn 1: Player (k mod 3) plays period, event or scene
+Turn 2: Player (k mod 3) plays nested event or scene (if desired)
+Turn 3: Player (k+1 mod 3) plays period, event or scene
+Turn 4: Player (k+2 mod 3) plays period, event or scene
+Turn 5: Player (k mod 3) plays period, event or scene
+Turn 6: Player (k mod 3) plays nested, event or scene (if desired)
+Turn 7: Player (k+2 mod 3) chooses a legacy.
+Turn 8: Player (k+2 mod 3) creates an event or scene based on legacy
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+If N = 4
+Round k > 0
+Turn 0: Player (k mod 4) is new lens, and picks a focus
+Turn 1: Player (k mod 4) plays period, event or scene
+Turn 2: Player (k mod 4) plays nested event or scene (if desired)
+Turn 3: Player (k+1 mod 4) plays period, event or scene
+Turn 4: Player (k+2 mod 4) plays period, event or scene
+Turn 5: Player (k+3 mod 4) plays period, event or scene
+Turn 6: Player (k mod 4) plays period, event or scene
+Turn 7: Player (k mod 4) plays nested, event or scene (if desired)
+Turn 8: Player (k+3 mod 4) chooses a legacy.
+Turn 9: Player (k+3 mod 4) creates an event or scene based on legacy
+
+
+If N = 5
+Round k > 0
+Turn 0: Player (k mod 5) is new lens, and picks a focus
+Turn 1: Player (k mod 5) plays period, event or scene
+Turn 2: Player (k mod 5) plays nested event or scene (if desired)
+Turn 3: Player (k+1 mod 5) plays period, event or scene
+Turn 4: Player (k+2 mod 5) plays period, event or scene
+Turn 5: Player (k+3 mod 5) plays period, event or scene
+Turn 6: Player (k+4 mod 5) plays period, event or scene
+Turn 7: Player (k mod 5) plays period, event or scene
+Turn 8: Player (k mod 5) plays nested, event or scene (if desired)
+Turn 9: Player (k+4 mod 5) chooses a legacy.
+Turn 10: Player (k+4 mod 5) creates an event or scene based on legacy
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+All N>2
+Round k > 0: 
+Turn 0: Player (k mod n) is new lens, and picks a focus
+Turn 1: Player (k mod n) plays period, event or scene
+Turn 2: Player (k mod n) plays nested event or scene (if desired)
+Turn 3: Player (k+1 mod n) plays period, event or scene
+Turn 4: Player (k+2 mod n) plays period, event or scene
+...
+Turn n: Player (k-2 mod n) plays period, event or scene
+Turn n+1: Player (k-1 mod n) plays period, event or scene
+Turn n+2: Player (k mod n) plays period, event or scene
+Turn n+3: Player (k mod n) plays nested, event or scene (if desired)
+Turn n+4: Player (k-1 mod n) chooses a legacy.
+Turn n+5: Player (k-1 mod n) creates an event or scene based on legacy
+
+
+
+
+General formula (nix special cases) Turn m: Player k+m-2 mod n
+
+
+A scene in step N of creation means it's time to do the following
+
+
+Steps Left in Dictated Scene:
+2: Setting
+1: Answer
+0: Done
+
+
+
+
+Steps Left in RPed Scene:
+4: Setting
+3: Banned / Required Characters
+2: Chooser Character
+1: Answer
+0: Done
