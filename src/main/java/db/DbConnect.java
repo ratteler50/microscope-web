@@ -1,53 +1,25 @@
 package db;
 
-import static support.Settings.HEROKU;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.sql.DataSource;
-import org.postgresql.ds.PGSimpleDataSource;
+import org.sqlite.SQLiteDataSource;
 
-public class DbConnect {
+public final class DbConnect {
 
-  public static DataSource getDataSource() {
-    // Default to localhost settings
-    String user = "postgres";
-    String password = "password";
-    String serverName = "localhost";
-    String databaseName = "microscope";
-    int portNumber = 5432;
-    PGSimpleDataSource source = new PGSimpleDataSource();
-    if (HEROKU) {
-      source.setSsl(true);
-      source.setSslfactory("org.postgresql.ssl.NonValidatingFactory");
-      URI dbUri = null;
-      try {
-        dbUri = new URI(System.getenv("DATABASE_URL"));
-      } catch (URISyntaxException e) {
-        throw new RuntimeException(e);
-      }
-
-      user = dbUri.getUserInfo().split(":")[0];
-      password = dbUri.getUserInfo().split(":")[1];
-      serverName = dbUri.getHost();
-      databaseName = dbUri.getPath().substring(1).trim();
-      portNumber = dbUri.getPort();
-    }
-
-    source.setServerName(serverName);
-    source.setDatabaseName(databaseName);
-    source.setPortNumber(portNumber);
-    source.setUser(user);
-    source.setPassword(password);
+  static DataSource getDataSource() {
+    SQLiteDataSource source = new SQLiteDataSource();
+    source.setUrl("jdbc:sqlite:" + Paths.get("microscope.db").toAbsolutePath().toString());
     return source;
   }
 
   // Connect to the database
   public static Connection connect() throws DbException {
     try {
-      return getDataSource().getConnection();
+      return checkNotNull(getDataSource().getConnection());
     } catch (SQLException ex) {
       System.err.println("Couldn't connect to database");
       ex.printStackTrace();
