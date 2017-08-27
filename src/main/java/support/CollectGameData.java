@@ -1,11 +1,17 @@
 package support;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import db.DbException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 import javax.sql.rowset.CachedRowSet;
 import model.DatabaseReads;
 import objects.Character;
@@ -20,8 +26,7 @@ import objects.Scene;
 
 public final class CollectGameData {
 
-  public static GameState populateGame(int gameID) throws DbException,
-      SQLException {
+  public static GameState populateGame(int gameID) throws DbException, SQLException {
     List<Player> gamePlayers = new ArrayList<>();
     List<Palette> gamePalette = new ArrayList<>();
     List<Legacy> gameLegacies = new ArrayList<>();
@@ -33,31 +38,46 @@ public final class CollectGameData {
     HashMap<Integer, Character> gameCharacters = new HashMap<>();
 
     // Fill in the initial Lists
-    GameState retval = collectGameData(gameID, gamePlayers, gamePalette,
-        gameLegacies, gameFocuses, gamePeriods, gameEvents, gameScenes,
-        gameCharacters);
+    GameState retval =
+        collectGameData(
+            gameID,
+            gamePlayers,
+            gamePalette,
+            gameLegacies,
+            gameFocuses,
+            gamePeriods,
+            gameEvents,
+            gameScenes,
+            gameCharacters);
 
     // Nest periods/events/scenes/characters
     setupCards(gameID, gamePeriods, gameEvents, gameScenes, gameCharacters);
 
     // Finish setting up gamestate before returning it
-    finishGameState(gamePlayers, gamePalette, gamePeriods, gameEvents,
-        gameScenes, gameFocuses, gameLegacies, retval);
+    finishGameState(
+        gamePlayers,
+        gamePalette,
+        gamePeriods,
+        gameEvents,
+        gameScenes,
+        gameFocuses,
+        gameLegacies,
+        retval);
     return retval;
-
   }
 
-  /**
-   * This private method fills the Lists with the contents of the database
-   */
-  private static GameState collectGameData(int gameID,
-      List<Player> gamePlayers, List<Palette> gamePalette,
-      List<Legacy> gameLegacies, HashMap<Integer, Focus> gameFocuses,
+  /** This private method fills the Lists with the contents of the database */
+  private static GameState collectGameData(
+      int gameID,
+      List<Player> gamePlayers,
+      List<Palette> gamePalette,
+      List<Legacy> gameLegacies,
+      HashMap<Integer, Focus> gameFocuses,
       HashMap<Integer, Period> gamePeriods,
       HashMap<Integer, Event> gameEvents,
       HashMap<Integer, Scene> gameScenes,
-      HashMap<Integer, Character> gameCharacters) throws DbException,
-      SQLException {
+      HashMap<Integer, Character> gameCharacters)
+      throws DbException, SQLException {
     CachedRowSet rowSet;
     // Get Players
     rowSet = DatabaseReads.getPlayers(gameID);
@@ -69,7 +89,7 @@ public final class CollectGameData {
     // Get Palette
     rowSet = DatabaseReads.getPalettes(gameID);
     while (rowSet.next()) {
-      gamePalette.add(new Palette(rowSet));
+      gamePalette.add(Palette.fromRow(rowSet));
     }
 
     // Get Focuses
@@ -120,15 +140,14 @@ public final class CollectGameData {
     return new GameState(rowSet);
   }
 
-  /**
-   * Takes Lists of periods, events and scenes
-   */
-  private static void setupCards(int gameID,
+  /** Takes Lists of periods, events and scenes */
+  private static void setupCards(
+      int gameID,
       HashMap<Integer, Period> gamePeriods,
       HashMap<Integer, Event> gameEvents,
       HashMap<Integer, Scene> gameScenes,
-      HashMap<Integer, Character> gameCharacters) throws DbException,
-      SQLException {
+      HashMap<Integer, Character> gameCharacters)
+      throws DbException, SQLException {
 
     // Setup the list of player controlled characters for each scene
     CachedRowSet inScene = DatabaseReads.getInScene(gameID);
@@ -145,21 +164,21 @@ public final class CollectGameData {
     // Setup parent event and children characters for scene cards
     for (Scene scene : gameScenes.values()) {
       // Add banned and required characters to the scene
-      Integer banned1ID = scene.banned1ID;
-      if (banned1ID != null) {
-        scene.banned1 = gameCharacters.get(banned1ID);
+      OptionalInt banned1Id = scene.banned1Id;
+      if (banned1Id.isPresent()) {
+        scene.banned1 = Optional.of(gameCharacters.get(banned1Id.getAsInt()));
       }
-      Integer banned2ID = scene.banned2ID;
-      if (banned2ID != null) {
-        scene.banned2 = gameCharacters.get(banned2ID);
+      OptionalInt banned2Id = scene.banned2Id;
+      if (banned2Id.isPresent()) {
+        scene.banned2 = Optional.of(gameCharacters.get(banned2Id.getAsInt()));
       }
-      Integer required1ID = scene.required1ID;
-      if (required1ID != null) {
-        scene.required1 = gameCharacters.get(required1ID);
+      OptionalInt required1Id = scene.required1Id;
+      if (required1Id.isPresent()) {
+        scene.required1 = Optional.of(gameCharacters.get(required1Id.getAsInt()));
       }
-      Integer required2ID = scene.required2ID;
-      if (required2ID != null) {
-        scene.required2 = gameCharacters.get(required2ID);
+      OptionalInt required2Id = scene.required2Id;
+      if (required2Id.isPresent()) {
+        scene.required2 = Optional.of(gameCharacters.get(required2Id.getAsInt()));
       }
 
       // Add the scene as a child to the correct event
@@ -167,7 +186,6 @@ public final class CollectGameData {
       Event parent = gameEvents.get(eventID);
       parent.scenes.add(scene);
       Collections.sort(parent.scenes);
-
     }
 
     // Now add the Events to the Periods
@@ -179,15 +197,28 @@ public final class CollectGameData {
     }
   }
 
-  /**
-   * Sets up the game state object with object version of contained information
-   */
-  private static void finishGameState(List<Player> gamePlayers,
-      List<Palette> gamePalette, HashMap<Integer, Period> gamePeriods,
-      HashMap<Integer, Event> gameEvents,
-      HashMap<Integer, Scene> gameScenes,
-      HashMap<Integer, Focus> gameFocuses, List<Legacy> gameLegacies,
+  /** Sets up the game state object with object version of contained information */
+  private static void finishGameState(
+      List<Player> gamePlayersMutable,
+      List<Palette> gamePaletteMutable,
+      HashMap<Integer, Period> gamePeriodsMutable,
+      HashMap<Integer, Event> gameEventsMutable,
+      HashMap<Integer, Scene> gameScenesMutable,
+      HashMap<Integer, Focus> gameFocusesMutable,
+      List<Legacy> gameLegaciesMutable,
       GameState game) {
+    ImmutableList<Player> gamePlayers =
+        gamePlayersMutable.stream().sorted().collect(toImmutableList());
+
+    ImmutableList<Palette> gamePalette = ImmutableList.copyOf(gamePaletteMutable);
+    ImmutableList<Legacy> gameLegacies =
+        gameLegaciesMutable.stream().sorted().collect(toImmutableList());
+    ImmutableMap<Integer, Period> gamePeriods = ImmutableMap.copyOf(gamePeriodsMutable);
+    ImmutableMap<Integer, Event> gameEvents = ImmutableMap.copyOf(gameEventsMutable);
+    ImmutableMap<Integer, Scene> gameScenes = ImmutableMap.copyOf(gameScenesMutable);
+    ImmutableMap<Integer, Focus> gameFocuses = ImmutableMap.copyOf(gameFocusesMutable);
+    ImmutableList<Period> periodList =
+        gamePeriods.values().stream().sorted().collect(toImmutableList());
 
     // Setup Current Lens
     for (Player player : gamePlayers) {
@@ -196,38 +227,36 @@ public final class CollectGameData {
       }
     }
 
-    if (game.last_pes != null) {
-      // Setup Last Card
-      if (game.last_pes == 0) {
-        game.lastCard = gamePeriods.get(game.lastCardID);
-      } else if (game.last_pes == 1) {
-        game.lastCard = gameEvents.get(game.lastCardID);
-      } else if (game.last_pes == 2) {
-        game.lastCard = gameScenes.get(game.lastCardID);
+    if (game.last_pes.isPresent()) {
+      switch (game.last_pes.get()) {
+        case PERIOD:
+          game.lastCardID.ifPresent(id -> game.lastCard = gamePeriods.get(id));
+          break;
+        case EVENT:
+          game.lastCardID.ifPresent(id -> game.lastCard = gameEvents.get(id));
+          break;
+        case SCENE:
+          game.lastCardID.ifPresent(id -> game.lastCard = gameScenes.get(id));
       }
     }
 
     // Attach the list of periods
-    List<Period> periodList = new ArrayList<>(gamePeriods.values());
-    Collections.sort(periodList);
     game.periods = periodList;
 
     // Attach the current focus
     game.focus = gameFocuses.get(game.round);
 
     // Attach the list of players
-    Collections.sort(gamePlayers);
     game.players = gamePlayers;
 
     // Attach all legacies
-    Collections.sort(gameLegacies);
     game.legacies = gameLegacies;
 
     // Attaches the palettes
     List<Palette> banned = new ArrayList<>();
     List<Palette> recommended = new ArrayList<>();
     for (Palette item : gamePalette) {
-      if (item.inGame) {
+      if (item.isInGame()) {
         recommended.add(item);
       } else {
         banned.add(item);

@@ -1,5 +1,6 @@
 package objects;
 
+import com.google.auto.value.AutoValue;
 import java.sql.SQLException;
 import javax.sql.rowset.CachedRowSet;
 
@@ -8,32 +9,25 @@ import javax.sql.rowset.CachedRowSet;
  *
  * @author dlorant
  */
-public class Palette {
+@AutoValue
+public abstract class Palette {
 
-  // Set during construction
-  public int id;
-  public int userID;
-  public String description;
-  public boolean inGame; // AKA not banned
-  public int gameID;
-  public Palette(CachedRowSet row) throws SQLException {
-    this.id = row.getInt("id");
-    this.userID = row.getInt("player");
-    this.description = row.getString("description");
-    this.inGame = row.getBoolean("in_game");
-    this.gameID = row.getInt("game");
+  public abstract int getId();
+
+  public abstract int getUserID();
+
+  public abstract String getDescription();
+
+  public abstract boolean isInGame(); // AKA not banned
+
+  public abstract int getGameID();
+
+  public static Palette fromRow(CachedRowSet row) throws SQLException {
+    int id = row.getInt("id");
+    int userID = row.getInt("player");
+    String description = row.getString("description");
+    boolean inGame = row.getBoolean("in_game");
+    int gameID = row.getInt("game");
+    return new AutoValue_Palette(id, userID, description, inGame, gameID);
   }
-
-  @Override
-  public String toString() {
-    return "Palette [id="
-        + id
-        + ", userID="
-        + userID
-        + ", "
-        + (description != null ? "description=" + description + ", "
-        : "") + "inGame=" + inGame + ", gameID=" + gameID + "]";
-  }
-
-
 }

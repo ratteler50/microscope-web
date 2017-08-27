@@ -123,7 +123,7 @@ public final class LegacySupport {
   /** Checks if the user has a legacy currently. If so, that user may pass * */
   public boolean userCanPass(int gameID, int round, int user) {
     for (Legacy leg : getRoundsLegacies(gameID, round)) {
-      if (leg.getPlayerId().isPresent() && leg.getPlayerId().equals(user)) {
+      if (leg.getPlayerId().isPresent() && leg.getPlayerId().getAsInt() == user) {
         return true;
       }
     }

@@ -64,6 +64,19 @@ public final class GameLogic {
     public int getNumber() {
       return number;
     }
+
+    public static PES fromInt(int pes) {
+      switch (pes) {
+        case 0:
+          return PERIOD;
+        case 1:
+          return EVENT;
+        case 2:
+          return SCENE;
+        default:
+          throw new IllegalArgumentException("Invalid PES");
+      }
+    }
   }
 
   public static void main(String args[]) {

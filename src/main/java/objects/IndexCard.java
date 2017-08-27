@@ -5,6 +5,30 @@ import javax.sql.rowset.CachedRowSet;
 
 public abstract class IndexCard implements Comparable<IndexCard> {
 
+  public enum Tone {
+    LIGHT(true),
+    DARK(false);
+
+    private final boolean dbValue;
+
+    Tone(boolean dbValue) {
+      this.dbValue = dbValue;
+    }
+
+    private boolean isDbValue() {
+      return dbValue;
+    }
+  }
+
+  public abstract int getId();
+  public abstract int getRound();
+  public abstract int getTurn();
+  public abstract Tone getTone();
+  public abstract int getPosition();
+  public abstract int getPlayerID();
+  public abstract String getText();
+  public abstract String getDescription();
+
   public final int id;
   public final int round;
   public final int turn;
