@@ -2,7 +2,6 @@ package servlets;
 
 import static model.DatabaseUpdates.focusSet;
 import static model.DatabaseUpdates.gameNextTurn;
-import static support.GameLogic.PICK_FOCUS;
 import static support.GameLogic.currPlayerAndAction;
 import static support.GameLogic.getCurrGameID;
 import static support.GameLogic.getCurrUserID;
@@ -14,6 +13,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import support.GameLogic.ActiveGameState;
+import support.GameLogic.PlayerAndAction;
 import support.Settings;
 
 /** Servlet implementation class SetFocus */
@@ -36,16 +37,16 @@ public final class SetFocus extends HttpServlet {
 
     // VERIFY THE CORRECT PLAYER AND ACTION
     if (!Settings.DEBUG) {
-      int[] CPA = currPlayerAndAction(gameID);
+      PlayerAndAction CPA = currPlayerAndAction(gameID);
       // If the current player and action are not valid, exit
-      if (CPA[0] != userID) {
+      if (CPA.getPlayer() != userID) {
         System.err.println("It is not your turn!");
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();
         writer.print("{\"success\" : false}");
         writer.flush();
         return;
-      } else if (CPA[1] != PICK_FOCUS) {
+      } else if (CPA.getAction() != ActiveGameState.PICK_FOCUS) {
         System.err.println("It is not time to pick the focus!");
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();

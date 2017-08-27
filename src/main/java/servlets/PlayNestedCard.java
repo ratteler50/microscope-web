@@ -4,9 +4,6 @@ import static model.DatabaseUpdates.eventAdd;
 import static model.DatabaseUpdates.gameNextTurn;
 import static model.DatabaseUpdates.sceneAdd;
 import static model.DatabaseUpdates.sceneSetSetting;
-import static support.GameLogic.EVENT;
-import static support.GameLogic.PLAY_NESTED_ES;
-import static support.GameLogic.SCENE;
 import static support.GameLogic.currPlayerAndAction;
 import static support.GameLogic.getCurrGameID;
 import static support.GameLogic.getCurrUserID;
@@ -22,6 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.rowset.CachedRowSet;
 import model.DatabaseReads;
 import support.GameLogic;
+import support.GameLogic.ActiveGameState;
+import support.GameLogic.PES;
+import support.GameLogic.PlayerAndAction;
+import support.GameLogic.TurnRound;
 import support.Settings;
 
 /** Servlet implementation class PlayNestedCard */
@@ -44,16 +45,16 @@ public class PlayNestedCard extends HttpServlet {
 
     // VERIFY THE CORRECT PLAYER AND ACTION
     if (!Settings.DEBUG) {
-      int[] CPA = currPlayerAndAction(gameID);
+      PlayerAndAction CPA = currPlayerAndAction(gameID);
       // If the current player and action are not valid, exit
-      if (CPA[0] != userID) {
+      if (CPA.getPlayer() != userID) {
         System.err.println("It is not your turn!");
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();
         writer.print("{\"success\" : false}");
         writer.flush();
         return;
-      } else if (CPA[1] != PLAY_NESTED_ES) {
+      } else if (CPA.getAction() != ActiveGameState.PLAY_NESTED_ES) {
         System.err.println("It is not time to paly a nested E/S!");
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();
@@ -67,9 +68,7 @@ public class PlayNestedCard extends HttpServlet {
     int parentPES = -1;
     int parentID = -1;
 
-    int[] turnRound = GameLogic.getTurnRound(gameID);
-    int turn = turnRound[0];
-    int round = turnRound[1];
+    TurnRound turnRound = GameLogic.getTurnRound(gameID);
 
     String passString = request.getParameter("pass");
     boolean pass = Boolean.valueOf(passString);
@@ -124,17 +123,36 @@ public class PlayNestedCard extends HttpServlet {
     String description = request.getParameter("description");
 
     try {
-      if (pes == EVENT) {
-        newCardID = eventAdd(userID, parentID, position, turn, round, text, description, tone);
+      if (pes == PES.EVENT.getNumber()) {
+        newCardID =
+            eventAdd(
+                userID,
+                parentID,
+                position,
+                turnRound.getTurn(),
+                turnRound.getRound(),
+                text,
+                description,
+                tone);
 
         gameNextTurn(gameID);
-      } else if (pes == SCENE) {
+      } else if (pes == PES.SCENE.getNumber()) {
         String dictatedString = request.getParameter("dictated");
         boolean dictated = Boolean.valueOf(dictatedString);
 
         String scene = request.getParameter("scene");
         newCardID =
-            sceneAdd(userID, parentID, position, turn, round, text, scene, "", "", dictated);
+            sceneAdd(
+                userID,
+                parentID,
+                position,
+                turnRound.getTurn(),
+                turnRound.getRound(),
+                text,
+                scene,
+                "",
+                "",
+                dictated);
         // Add the setting for the scene
         sceneSetSetting(newCardID, scene);
       }

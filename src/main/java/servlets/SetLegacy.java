@@ -3,7 +3,6 @@ package servlets;
 import static model.DatabaseUpdates.gameNextTurn;
 import static model.DatabaseUpdates.legaciesAdd;
 import static model.DatabaseUpdates.playerSetActionDone;
-import static support.GameLogic.PICK_LEGACY;
 import static support.GameLogic.currPlayerAndAction;
 import static support.GameLogic.getCurrGameID;
 import static support.GameLogic.getCurrUserID;
@@ -23,6 +22,9 @@ import model.DatabaseReads;
 import model.DatabaseUpdates;
 import objects.Legacy;
 import support.GameLogic;
+import support.GameLogic.ActiveGameState;
+import support.GameLogic.PlayerAndAction;
+import support.GameLogic.TurnRound;
 import support.LegacySupport;
 import support.Settings;
 
@@ -46,16 +48,16 @@ public final class SetLegacy extends HttpServlet {
     int userID = getCurrUserID();
     int gameID = getCurrGameID(request);
 
-    int[] turnRound = GameLogic.getTurnRound(gameID);
-    int round = turnRound[1];
+    TurnRound turnRound = GameLogic.getTurnRound(gameID);
+    int round = turnRound.getRound();
     boolean isAuction = isAuction(gameID, round);
 
     // VERIFY THE CORRECT PLAYER AND ACTION
     //TODO: Fix check for auction!
     if (!Settings.DEBUG) {
-      int[] CPA = currPlayerAndAction(gameID);
+      PlayerAndAction CPA = currPlayerAndAction(gameID);
       // If the current player and action are not valid, exit
-      if (CPA[1] != PICK_LEGACY) {
+      if (CPA.getAction() != ActiveGameState.PICK_LEGACY) {
         System.err.println("It is not time to set the legacy!");
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();
@@ -63,7 +65,7 @@ public final class SetLegacy extends HttpServlet {
         writer.flush();
         return;
       }
-      if (CPA[0] != userID && (!isAuction || isPlayerActionDone(gameID, userID))) {
+      if (CPA.getPlayer() != userID && (!isAuction || isPlayerActionDone(gameID, userID))) {
         System.err.println("It is not your turn!");
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();

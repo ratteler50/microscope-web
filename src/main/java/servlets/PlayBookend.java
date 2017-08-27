@@ -3,8 +3,6 @@ package servlets;
 import static model.DatabaseReads.getNumPeriods;
 import static model.DatabaseUpdates.gameNextTurn;
 import static model.DatabaseUpdates.periodAdd;
-import static support.GameLogic.BOOKEND_PERIODS;
-import static support.GameLogic.PERIOD;
 import static support.GameLogic.currPlayerAndAction;
 import static support.GameLogic.getCurrGameID;
 import static support.GameLogic.getCurrUserID;
@@ -18,6 +16,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import support.GameLogic;
+import support.GameLogic.ActiveGameState;
+import support.GameLogic.PES;
+import support.GameLogic.PlayerAndAction;
+import support.GameLogic.TurnRound;
 import support.Settings;
 
 /** Servlet implementation class PlayBookend */
@@ -42,7 +44,7 @@ public final class PlayBookend extends HttpServlet {
 
     // VERIFY THE CORRECT PLAYER AND ACTION
     if (!Settings.DEBUG) {
-      int[] CPA = currPlayerAndAction(gameID);
+      PlayerAndAction CPA = currPlayerAndAction(gameID);
       System.err.println("owner: " + gameOwner + "; userID:" + userID);
       // If the current player and action are not valid, exit
       if (gameOwner != userID) {
@@ -52,7 +54,7 @@ public final class PlayBookend extends HttpServlet {
         writer.print("{\"success\" : false}");
         writer.flush();
         return;
-      } else if (CPA[1] != BOOKEND_PERIODS) {
+      } else if (CPA.getAction() != ActiveGameState.BOOKEND_PERIODS) {
         System.err.println("It is not time to play bookends!");
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();
@@ -86,13 +88,20 @@ public final class PlayBookend extends HttpServlet {
     String text = request.getParameter("text");
     String description = request.getParameter("description");
 
-    int[] turnRound = GameLogic.getTurnRound(gameID);
-    int turn = turnRound[0];
-    int round = turnRound[1];
+    TurnRound turnRound = GameLogic.getTurnRound(gameID);
 
     try {
-      if (pes == PERIOD) {
-        newCardID = periodAdd(userID, parentID, position, turn, round, text, description, tone);
+      if (pes == PES.PERIOD.getNumber()) {
+        newCardID =
+            periodAdd(
+                userID,
+                parentID,
+                position,
+                turnRound.getTurn(),
+                turnRound.getRound(),
+                text,
+                description,
+                tone);
         if (periodsPlayed == 1) {
           gameNextTurn(gameID);
         }

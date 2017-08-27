@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import support.GameLogic;
+import support.GameLogic.ActiveGameState;
+import support.GameLogic.PlayerAndAction;
 import support.Settings;
 
 /** Servlet implementation class PlayPalette */
@@ -39,9 +41,9 @@ public final class PlayPalette extends HttpServlet {
 
     // VERIFY THE CORRECT PLAYER AND ACTION
     if (!Settings.DEBUG) {
-      int[] CPA = GameLogic.currPlayerAndAction(gameID);
+      PlayerAndAction CPA = GameLogic.currPlayerAndAction(gameID);
       // If the current player and action are not valid, exit
-      if (CPA[1] != GameLogic.PALETTE) {
+      if (CPA.getAction() != ActiveGameState.PALETTE) {
         System.err.println("It is not time to change the palette!");
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();

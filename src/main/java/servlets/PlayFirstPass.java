@@ -6,9 +6,6 @@ import static model.DatabaseUpdates.eventAdd;
 import static model.DatabaseUpdates.gameNextRound;
 import static model.DatabaseUpdates.periodAdd;
 import static model.DatabaseUpdates.playerSetActionDone;
-import static support.GameLogic.EVENT;
-import static support.GameLogic.FIRST_PASS_PE;
-import static support.GameLogic.PERIOD;
 import static support.GameLogic.currPlayerAndAction;
 import static support.GameLogic.findCurrentPlayerID;
 import static support.GameLogic.getCurrGameID;
@@ -22,6 +19,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import support.GameLogic.ActiveGameState;
+import support.GameLogic.PES;
+import support.GameLogic.PlayerAndAction;
+import support.GameLogic.TurnRound;
 import support.Settings;
 
 /** Servlet implementation class PlayFirstPass */
@@ -44,7 +45,7 @@ public final class PlayFirstPass extends HttpServlet {
 
     // VERIFY THE CORRECT PLAYER AND ACTION
     if (!Settings.DEBUG) {
-      int[] CPA = currPlayerAndAction(gameID);
+      PlayerAndAction CPA = currPlayerAndAction(gameID);
       // If the current player and action are not valid, exit
       if (actionDoneCheck(userID, gameID)) {
         System.err.println("You have already played your first pass!");
@@ -53,7 +54,7 @@ public final class PlayFirstPass extends HttpServlet {
         writer.print("{\"success\" : false}");
         writer.flush();
         return;
-      } else if (CPA[1] != FIRST_PASS_PE) {
+      } else if (CPA.getAction() != ActiveGameState.FIRST_PASS_PE) {
         System.err.println("It is not time for first pass!");
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();
@@ -80,17 +81,32 @@ public final class PlayFirstPass extends HttpServlet {
     String text = request.getParameter("text");
     String description = request.getParameter("description");
 
-    int[] turnRound = getTurnRound(gameID);
-    int turn = turnRound[0];
-    int round = turnRound[1];
+    TurnRound turnRound = getTurnRound(gameID);
 
     try {
       // Add a period
-      if (pes == PERIOD) {
-
-        newCardID = periodAdd(userID, parentID, position, turn, round, text, description, tone);
-      } else if (pes == EVENT) {
-        newCardID = eventAdd(userID, parentID, position, turn, round, text, description, tone);
+      if (pes == PES.PERIOD.getNumber()) {
+        newCardID =
+            periodAdd(
+                userID,
+                parentID,
+                position,
+                turnRound.getTurn(),
+                turnRound.getRound(),
+                text,
+                description,
+                tone);
+      } else if (pes == PES.EVENT.getNumber()) {
+        newCardID =
+            eventAdd(
+                userID,
+                parentID,
+                position,
+                turnRound.getTurn(),
+                turnRound.getRound(),
+                text,
+                description,
+                tone);
       }
       // The player has played their card
       playerSetActionDone(userID, gameID, true);

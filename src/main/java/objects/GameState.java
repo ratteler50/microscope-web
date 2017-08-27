@@ -44,7 +44,7 @@ public class GameState {
 
   @Override
   public String toString() {
-    return "GameState [id=" + id + ", active=" + active + ", bigPicture="
+    return "ActiveGameState [id=" + id + ", active=" + active + ", bigPicture="
         + bigPicture + ", round=" + round + ", turn=" + turn
         + ", lensID=" + lensID + ", last_pes=" + last_pes
         + ", lastCardID=" + lastCardID + ", lens=" + lens
