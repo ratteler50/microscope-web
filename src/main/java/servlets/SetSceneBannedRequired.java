@@ -18,6 +18,7 @@ import static support.GameLogic.getTurnRound;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,33 +26,20 @@ import javax.servlet.http.HttpServletResponse;
 import support.GameLogic;
 import support.Settings;
 
-/**
- * Servlet implementation class SetSceneAnswer
- */
+/** Servlet implementation class SetSceneAnswer */
 @SuppressWarnings("serial")
-public class SetSceneBannedRequired extends HttpServlet {
+public final class SetSceneBannedRequired extends HttpServlet {
 
-  /**
-   * @see HttpServlet#HttpServlet()
-   */
-  public SetSceneBannedRequired() {
-    super();
-    // TODO Auto-generated constructor stub
-  }
+  @Inject
+  public SetSceneBannedRequired() {}
 
-  /**
-   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doGet(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  /** @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response) */
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {}
 
-  }
-
-  /**
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doPost(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  /** @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response) */
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
 
     int userID = getCurrUserID();
     int gameID = getCurrGameID(request);
@@ -68,8 +56,7 @@ public class SetSceneBannedRequired extends HttpServlet {
         writer.flush();
         return;
       } else if (CPA[1] != PLAY_PES && CPA[1] != PLAY_NESTED_ES) {
-        System.err
-            .println("It is not time to pick who is banned/required from a scene!");
+        System.err.println("It is not time to pick who is banned/required from a scene!");
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();
         writer.print("{\"success\" : false}");
@@ -105,8 +92,7 @@ public class SetSceneBannedRequired extends HttpServlet {
       sceneStepDone(cardID);
 
       if (currAction == PLAY_LEGACY_ES) {
-        int newLens = GameLogic.findCurrentPlayerID(gameID, 0,
-            turnRound[1] + 1);
+        int newLens = GameLogic.findCurrentPlayerID(gameID, 0, turnRound[1] + 1);
         gameNextRound(gameID, newLens);
       } else {
         gameNextTurn(gameID);
@@ -124,5 +110,4 @@ public class SetSceneBannedRequired extends HttpServlet {
     writer.print("{\"success\" : true}");
     writer.flush();
   }
-
 }

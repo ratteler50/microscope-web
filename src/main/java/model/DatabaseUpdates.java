@@ -13,7 +13,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 import objects.Legacy;
 
-public class DatabaseUpdates {
+public final class DatabaseUpdates {
 
   // Connect to the database
   protected static Connection connect() throws DbException {

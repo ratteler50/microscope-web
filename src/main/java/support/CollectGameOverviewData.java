@@ -10,7 +10,7 @@ import model.DatabaseReads;
 import objects.GameOverview;
 import objects.Player;
 
-public class CollectGameOverviewData {
+public final class CollectGameOverviewData {
 
   /**
    * Get the game overviews for all games a given user is in

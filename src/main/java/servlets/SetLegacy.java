@@ -14,6 +14,7 @@ import db.DbException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,34 +28,21 @@ import support.Settings;
 
 //TODO: Check Auction is correctly done
 
-/**
- * Servlet implementation class SetLegacy
- */
-public class SetLegacy extends HttpServlet {
+/** Servlet implementation class SetLegacy */
+public final class SetLegacy extends HttpServlet {
 
   private static final long serialVersionUID = 1L;
 
-  /**
-   * @see HttpServlet#HttpServlet()
-   */
-  public SetLegacy() {
-    super();
-    // TODO Auto-generated constructor stub
-  }
+  @Inject
+  public SetLegacy() {}
 
-  /**
-   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doGet(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  /** @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response) */
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {}
 
-  }
-
-  /**
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doPost(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  /** @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response) */
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
     int userID = getCurrUserID();
     int gameID = getCurrGameID(request);
 
@@ -92,8 +80,7 @@ public class SetLegacy extends HttpServlet {
     if (!isAuction(gameID, round)) {
       if (pass) {
         try {
-          List<Legacy> newLegacies = LegacySupport.copyLegacies(
-              gameID, round);
+          List<Legacy> newLegacies = LegacySupport.copyLegacies(gameID, round);
           legaciesAdd(newLegacies);
           gameNextTurn(gameID);
         } catch (DbException e) {
@@ -111,13 +98,12 @@ public class SetLegacy extends HttpServlet {
         return;
       }
 
-			/*
+      /*
        * Logic for adding a new legacy
-			 */
+       */
       String legacy = request.getParameter("legacy");
       try {
-        List<Legacy> newLegacies = LegacySupport.copyAndAddLegacy(
-            gameID, round, userID, legacy);
+        List<Legacy> newLegacies = LegacySupport.copyAndAddLegacy(gameID, round, userID, legacy);
         legaciesAdd(newLegacies);
 
         // This player cannot try to take from null
@@ -169,9 +155,9 @@ public class SetLegacy extends HttpServlet {
         return;
       }
 
-			/*
+      /*
        * You want the card up for grabs. Replace it with your own
-			 */
+       */
       try {
         LegacySupport.takeDiscarded(userID, gameID, round);
 

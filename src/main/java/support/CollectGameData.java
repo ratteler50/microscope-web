@@ -18,19 +18,19 @@ import objects.Period;
 import objects.Player;
 import objects.Scene;
 
-public class CollectGameData {
+public final class CollectGameData {
 
   public static GameState populateGame(int gameID) throws DbException,
       SQLException {
-    List<Player> gamePlayers = new ArrayList<Player>();
-    List<Palette> gamePalette = new ArrayList<Palette>();
-    List<Legacy> gameLegacies = new ArrayList<Legacy>();
+    List<Player> gamePlayers = new ArrayList<>();
+    List<Palette> gamePalette = new ArrayList<>();
+    List<Legacy> gameLegacies = new ArrayList<>();
 
-    HashMap<Integer, Focus> gameFocuses = new HashMap<Integer, Focus>();
-    HashMap<Integer, Period> gamePeriods = new HashMap<Integer, Period>();
-    HashMap<Integer, Event> gameEvents = new HashMap<Integer, Event>();
-    HashMap<Integer, Scene> gameScenes = new HashMap<Integer, Scene>();
-    HashMap<Integer, Character> gameCharacters = new HashMap<Integer, Character>();
+    HashMap<Integer, Focus> gameFocuses = new HashMap<>();
+    HashMap<Integer, Period> gamePeriods = new HashMap<>();
+    HashMap<Integer, Event> gameEvents = new HashMap<>();
+    HashMap<Integer, Scene> gameScenes = new HashMap<>();
+    HashMap<Integer, Character> gameCharacters = new HashMap<>();
 
     // Fill in the initial Lists
     GameState retval = collectGameData(gameID, gamePlayers, gamePalette,
@@ -208,7 +208,7 @@ public class CollectGameData {
     }
 
     // Attach the list of periods
-    List<Period> periodList = new ArrayList<Period>(gamePeriods.values());
+    List<Period> periodList = new ArrayList<>(gamePeriods.values());
     Collections.sort(periodList);
     game.periods = periodList;
 
@@ -224,8 +224,8 @@ public class CollectGameData {
     game.legacies = gameLegacies;
 
     // Attaches the palettes
-    List<Palette> banned = new ArrayList<Palette>();
-    List<Palette> recommended = new ArrayList<Palette>();
+    List<Palette> banned = new ArrayList<>();
+    List<Palette> recommended = new ArrayList<>();
     for (Palette item : gamePalette) {
       if (item.inGame) {
         recommended.add(item);

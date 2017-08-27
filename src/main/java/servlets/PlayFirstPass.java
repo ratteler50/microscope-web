@@ -17,40 +17,28 @@ import static support.GameLogic.getTurnRound;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import support.Settings;
 
-/**
- * Servlet implementation class PlayFirstPass
- */
-public class PlayFirstPass extends HttpServlet {
+/** Servlet implementation class PlayFirstPass */
+public final class PlayFirstPass extends HttpServlet {
 
   private static final long serialVersionUID = 1L;
 
-  /**
-   * @see HttpServlet#HttpServlet()
-   */
-  public PlayFirstPass() {
-    super();
-    // TODO Auto-generated constructor stub
-  }
+  @Inject
+  public PlayFirstPass() {}
 
-  /**
-   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doGet(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  /** @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response) */
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {}
 
-  }
-
-  /**
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doPost(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  /** @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response) */
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
     int userID = getCurrUserID();
     int gameID = getCurrGameID(request);
 
@@ -98,14 +86,11 @@ public class PlayFirstPass extends HttpServlet {
 
     try {
       // Add a period
-      if (pes == PERIOD)
+      if (pes == PERIOD) {
 
-      {
-        newCardID = periodAdd(userID, parentID, position, turn, round,
-            text, description, tone);
+        newCardID = periodAdd(userID, parentID, position, turn, round, text, description, tone);
       } else if (pes == EVENT) {
-        newCardID = eventAdd(userID, parentID, position, turn, round,
-            text, description, tone);
+        newCardID = eventAdd(userID, parentID, position, turn, round, text, description, tone);
       }
       // The player has played their card
       playerSetActionDone(userID, gameID, true);

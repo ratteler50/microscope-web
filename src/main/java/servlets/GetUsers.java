@@ -2,6 +2,7 @@ package servlets;
 
 import db.DbException;
 import java.io.IOException;
+import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,26 +11,17 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.rowset.CachedRowSet;
 import model.DatabaseReads;
 
-/**
- * Servlet that gets a list of all users
- */
-public class GetUsers extends HttpServlet {
+/** Servlet that gets a list of all users */
+public final class GetUsers extends HttpServlet {
 
   private static final long serialVersionUID = 1L;
 
-  /**
-   * @see HttpServlet#HttpServlet()
-   */
-  public GetUsers() {
-    super();
-    // TODO Auto-generated constructor stub
-  }
+  @Inject
+  public GetUsers() {}
 
-  /**
-   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doGet(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  /** @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response) */
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
 
     CachedRowSet crsUsers = null;
     try {
@@ -41,18 +33,13 @@ public class GetUsers extends HttpServlet {
 
     request.setAttribute("allUsers", crsUsers);
 
-    RequestDispatcher dispatch = request
-        .getRequestDispatcher("pickPlayers.jsp");
+    RequestDispatcher dispatch = request.getRequestDispatcher("pickPlayers.jsp");
     dispatch.forward(request, response);
-
   }
 
-  /**
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doPost(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  /** @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response) */
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
     doGet(request, response);
   }
-
 }

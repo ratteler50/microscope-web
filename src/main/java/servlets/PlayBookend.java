@@ -12,6 +12,7 @@ import static support.GameLogic.getGamePlayers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,34 +20,21 @@ import javax.servlet.http.HttpServletResponse;
 import support.GameLogic;
 import support.Settings;
 
-/**
- * Servlet implementation class PlayBookend
- */
-public class PlayBookend extends HttpServlet {
+/** Servlet implementation class PlayBookend */
+public final class PlayBookend extends HttpServlet {
 
   private static final long serialVersionUID = 1L;
 
-  /**
-   * @see HttpServlet#HttpServlet()
-   */
-  public PlayBookend() {
-    super();
-    // TODO Auto-generated constructor stub
-  }
+  @Inject
+  public PlayBookend() {}
 
-  /**
-   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doGet(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  /** @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response) */
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {}
 
-  }
-
-  /**
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doPost(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  /** @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response) */
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
     int userID = getCurrUserID();
     int gameID = getCurrGameID(request);
     int gameOwner = getGamePlayers(gameID)[0];
@@ -72,8 +60,7 @@ public class PlayBookend extends HttpServlet {
         writer.flush();
         return;
       } else if (periodsPlayed > 1) {
-        System.err
-            .println("The bookends have already both been played!");
+        System.err.println("The bookends have already both been played!");
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();
         writer.print("{\"success\" : false}");
@@ -105,12 +92,10 @@ public class PlayBookend extends HttpServlet {
 
     try {
       if (pes == PERIOD) {
-        newCardID = periodAdd(userID, parentID, position, turn, round,
-            text, description, tone);
+        newCardID = periodAdd(userID, parentID, position, turn, round, text, description, tone);
         if (periodsPlayed == 1) {
           gameNextTurn(gameID);
         }
-
       }
 
     } catch (Exception e) {

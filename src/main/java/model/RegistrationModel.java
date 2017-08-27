@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class RegistrationModel {
+public final class RegistrationModel {
 
   // Connect to the database
   protected static Connection connect() throws DbException {

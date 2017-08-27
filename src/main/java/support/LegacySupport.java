@@ -16,7 +16,7 @@ import java.util.OptionalInt;
 import javax.sql.rowset.CachedRowSet;
 import objects.Legacy;
 
-public class LegacySupport {
+public final class LegacySupport {
 
   /**
    * Takes all of the legacies from the last round, and returns a list of objects of them with round

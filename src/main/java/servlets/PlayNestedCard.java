@@ -14,6 +14,7 @@ import static support.GameLogic.getCurrUserID;
 import db.DbException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,34 +24,21 @@ import model.DatabaseReads;
 import support.GameLogic;
 import support.Settings;
 
-/**
- * Servlet implementation class PlayNestedCard
- */
+/** Servlet implementation class PlayNestedCard */
 public class PlayNestedCard extends HttpServlet {
 
   private static final long serialVersionUID = 1L;
 
-  /**
-   * @see HttpServlet#HttpServlet()
-   */
-  public PlayNestedCard() {
-    super();
-    // TODO Auto-generated constructor stub
-  }
+  @Inject
+  public PlayNestedCard() {}
 
-  /**
-   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doGet(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  /** @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response) */
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {}
 
-  }
-
-  /**
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doPost(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  /** @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response) */
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
     int userID = getCurrUserID();
     int gameID = getCurrGameID(request);
 
@@ -104,9 +92,9 @@ public class PlayNestedCard extends HttpServlet {
       return;
     }
 
-		/*
+    /*
      * Logic for playing nested card below
-		 */
+     */
     CachedRowSet rowSet;
 
     try {
@@ -137,8 +125,7 @@ public class PlayNestedCard extends HttpServlet {
 
     try {
       if (pes == EVENT) {
-        newCardID = eventAdd(userID, parentID, position, turn, round, text,
-            description, tone);
+        newCardID = eventAdd(userID, parentID, position, turn, round, text, description, tone);
 
         gameNextTurn(gameID);
       } else if (pes == SCENE) {
@@ -146,8 +133,8 @@ public class PlayNestedCard extends HttpServlet {
         boolean dictated = Boolean.valueOf(dictatedString);
 
         String scene = request.getParameter("scene");
-        newCardID = sceneAdd(userID, parentID, position, turn, round, text, scene, "", "",
-            dictated);
+        newCardID =
+            sceneAdd(userID, parentID, position, turn, round, text, scene, "", "", dictated);
         // Add the setting for the scene
         sceneSetSetting(newCardID, scene);
       }

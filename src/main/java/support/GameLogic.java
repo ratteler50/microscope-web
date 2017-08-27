@@ -15,7 +15,7 @@ import org.apache.shiro.SecurityUtils;
  *
  * @author David Lorant
  */
-public class GameLogic {
+public final class GameLogic {
 
   // ENUMS for possible game states
   public static final int ADD_PLAYERS = 0;

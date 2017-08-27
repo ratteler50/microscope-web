@@ -14,7 +14,7 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
  *
  * @author dlorant
  */
-public class MicroscopeJdbcRealm extends JdbcRealm {
+public final class MicroscopeJdbcRealm extends JdbcRealm {
 
   public MicroscopeJdbcRealm() {
     super();

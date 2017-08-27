@@ -18,6 +18,7 @@ import static support.GameLogic.getTurnRound;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,37 +26,21 @@ import javax.servlet.http.HttpServletResponse;
 import support.GameLogic;
 import support.Settings;
 
-/**
- * Servlet implementation class SetSceneAnswer
- */
-public class SetSceneAnswer extends HttpServlet {
+/** Servlet implementation class SetSceneAnswer */
+public final class SetSceneAnswer extends HttpServlet {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
 
-  /**
-   * @see HttpServlet#HttpServlet()
-   */
-  public SetSceneAnswer() {
-    super();
-    // TODO Auto-generated constructor stub
-  }
+  @Inject
+  public SetSceneAnswer() {}
 
-  /**
-   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doGet(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  /** @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response) */
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {}
 
-  }
-
-  /**
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doPost(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  /** @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response) */
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
 
     int userID = getCurrUserID();
     int gameID = getCurrGameID(request);
@@ -71,8 +56,7 @@ public class SetSceneAnswer extends HttpServlet {
         writer.print("{\"success\" : false}");
         writer.flush();
         return;
-      } else if (CPA[1] != PLAY_PES && CPA[1] != PLAY_NESTED_ES
-          && CPA[1] != PLAY_LEGACY_ES) {
+      } else if (CPA[1] != PLAY_PES && CPA[1] != PLAY_NESTED_ES && CPA[1] != PLAY_LEGACY_ES) {
         System.err.println("It is not time to set the scene answer!");
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();
@@ -109,8 +93,7 @@ public class SetSceneAnswer extends HttpServlet {
       sceneStepDone(cardID);
 
       if (currAction == PLAY_LEGACY_ES) {
-        int newLens = GameLogic.findCurrentPlayerID(gameID, 0,
-            turnRound[1] + 1);
+        int newLens = GameLogic.findCurrentPlayerID(gameID, 0, turnRound[1] + 1);
         gameNextRound(gameID, newLens);
       } else {
         gameNextTurn(gameID);
@@ -128,5 +111,4 @@ public class SetSceneAnswer extends HttpServlet {
     writer.print("{\"success\" : true}");
     writer.flush();
   }
-
 }

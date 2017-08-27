@@ -6,6 +6,7 @@ import static support.GameLogic.getCurrUserID;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,26 +14,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import objects.GameState;
 
-/**
- * Servlet implementation class GetFreshGameState
- */
-public class GetFreshGameState extends HttpServlet {
+/** Servlet implementation class GetFreshGameState */
+public final class GetFreshGameState extends HttpServlet {
 
   private static final long serialVersionUID = 1L;
 
-  /**
-   * @see HttpServlet#HttpServlet()
-   */
-  public GetFreshGameState() {
-    super();
-    // TODO Auto-generated constructor stub
-  }
+  @Inject
+  public GetFreshGameState() {}
 
-  /**
-   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doGet(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  /** @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response) */
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
     int gameID = getCurrGameID(request);
 
     // Add the gameID to the session
@@ -48,15 +40,11 @@ public class GetFreshGameState extends HttpServlet {
 
     RequestDispatcher dispatch = request.getRequestDispatcher("game.jsp");
     dispatch.forward(request, response);
-
   }
 
-
-  /**
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doPost(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  /** @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response) */
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
 
     int gameID = getCurrGameID(request);
     GameState state = null;
@@ -76,5 +64,4 @@ public class GetFreshGameState extends HttpServlet {
     writer.flush();
     return;
   }
-
 }

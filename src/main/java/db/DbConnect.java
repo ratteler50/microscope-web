@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.sqlite.SQLiteDataSource;
 
-public class DbConnect {
+public final class DbConnect {
   public static DataSource getDataSource() {
     SQLiteDataSource source = new SQLiteDataSource();
     source.setUrl("jdbc:sqlite:" + Paths.get("microscope.db").toAbsolutePath().toString());

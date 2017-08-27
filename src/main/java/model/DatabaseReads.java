@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.sql.rowset.CachedRowSet;
 
-public class DatabaseReads {
+public final class DatabaseReads {
 
   // Connect to the database
   protected static Connection connect() throws DbException {
